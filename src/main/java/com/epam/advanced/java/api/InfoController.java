@@ -8,13 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/study/v1")
 public class InfoController {
 
+    @GetMapping("/about")
+    public String getAbout(){
+        return "This is a JMP Study Spring MVC Application";
+    }
+
     @GetMapping("/info")
     public String getInfo(){
         return "Spring Web Application";
     }
 
-    @GetMapping("/about")
-    public String getAbout(){
-        return "This is a JMP Study Spring MVC Application";
+    @GetMapping("/admin")
+    public String getAdmin(){
+        return "This is an Admin resource";
     }
 }

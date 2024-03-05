@@ -74,4 +74,38 @@
             <where>username='admin'</where>
         </update>
     </changeSet>
+
+    <changeSet id="populate-users-with-view-info-admin-roles" author="AShypkov">
+        <insert tableName="users">
+            <column name="username" value="user_view"/>
+            <column name="password" value="{bcrypt}$2a$10$XUeUl0d9gyzATiFFiZzAXOoBdYyuRSvyTLZLpgURLhmtdquhtI9x6"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="user_admin"/>
+            <column name="password" value="{bcrypt}$2a$10$BiKglhINaFfCfSVbvfVQc.3ig/WcDslKwq2I8jfByMhqDLuFF5LVu"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="user_view_admin"/>
+            <column name="password" value="{bcrypt}$2a$10$3tR1JtgE6mm7gUPzWq2g9u1tCcy1BCSdJIqT8b70Uzi8rjjXoQ.ie"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_VIEW_INFO"/>
+            <column name="username" value="user_view"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_VIEW_ADMIN"/>
+            <column name="username" value="user_admin"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_VIEW_INFO"/>
+            <column name="username" value="user_view_admin"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_VIEW_ADMIN"/>
+            <column name="username" value="user_view_admin"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

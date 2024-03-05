@@ -5,10 +5,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
+
+import static com.epam.advanced.java.config.constants.Role.VIEW_ADMIN;
+import static com.epam.advanced.java.config.constants.Role.VIEW_INFO;
 
 @Configuration
 @EnableWebSecurity
@@ -39,6 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .authorizeRequests()
                 .antMatchers("/study/v1/about").permitAll()
+                .antMatchers("/study/v1/info").hasRole(VIEW_INFO.name())
+                .antMatchers("/study/v1/admin").hasRole(VIEW_ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
@@ -55,4 +62,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return NoOpPasswordEncoder.getInstance();
     }
      */
+
+    @Bean
+    public GrantedAuthoritiesMapper grantedAuthoritiesMapper(){
+        SimpleAuthorityMapper simpleAuthorityMapper = new SimpleAuthorityMapper();
+        simpleAuthorityMapper.setConvertToUpperCase(true);
+        return simpleAuthorityMapper;
+    }
 }
