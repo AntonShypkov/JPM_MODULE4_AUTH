@@ -12,4 +12,9 @@ public class InfoController {
     public String getInfo(){
         return "Spring Web Application";
     }
+
+    @GetMapping("/about")
+    public String getAbout(){
+        return "This is a JMP Study Spring MVC Application";
+    }
 }

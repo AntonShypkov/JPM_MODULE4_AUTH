@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+    <changeSet id="create-users-table" author="AShypkov">
+        <createTable tableName="users">
+            <column name="username" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="password" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-authorities-table" author="AShypkov">
+        <createTable tableName="authorities">
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="AShypkov" id="add-foreign-key-fk_users_authorities_username">
+        <addForeignKeyConstraint baseColumnNames="username" baseTableName="authorities"
+                                 constraintName="fk_user_authorities_user_name" deferrable="false"
+                                 referencedColumnNames="username" referencedTableName="users" validate="true"/>
+    </changeSet>
+
+    <changeSet author="AShypkov" id="create-index-authorities_username">
+        <createIndex indexName="ix_auth_username" tableName="authorities">
+            <column name="username"/>
+            <column name="authority"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="populate-users-with-roles" author="AShypkov">
+        <insert tableName="users">
+            <column name="username" value="sa"/>
+            <column name="password" value="testPsswd"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="users">
+            <column name="username" value="admin"/>
+            <column name="password" value="admin"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_USER"/>
+            <column name="username" value="sa"/>
+        </insert>
+        <insert tableName="authorities">
+            <column name="authority" value="ROLE_ADMIN"/>
+            <column name="username" value="admin"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="update-users-passwords-bycrypt" author="AShypkov">
+        <update tableName="users">
+            <column name="password" value="{bcrypt}$2a$10$SJPeY3Qw5m2qF7gJc6xjxORn31SLTry27b9BCKwIfwv/oqXg8QmvG"/>
+            <where>username='sa'</where>
+        </update>
+        <update tableName="users">
+            <column name="password" value="{bcrypt}$2a$10$ZSFHl/U3oq1Dr.F06aXl7ujCReeyal3dZ1afC1tPAr6G.yQWzfgxW"/>
+            <where>username='admin'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>
