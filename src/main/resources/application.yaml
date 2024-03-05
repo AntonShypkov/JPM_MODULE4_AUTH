@@ -6,3 +6,14 @@ spring:
     username: ${PG_USER}
   jpa:
     database: postgresql
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+login:
+  failure:
+    max:
+      attempts: 3
+    block:
+      minutes: 5

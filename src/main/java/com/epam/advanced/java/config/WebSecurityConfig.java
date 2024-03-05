@@ -12,8 +12,8 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
-import static com.epam.advanced.java.config.constants.Role.VIEW_ADMIN;
-import static com.epam.advanced.java.config.constants.Role.VIEW_INFO;
+import static com.epam.advanced.java.config.constant.Role.VIEW_ADMIN;
+import static com.epam.advanced.java.config.constant.Role.VIEW_INFO;
 
 @Configuration
 @EnableWebSecurity
@@ -46,9 +46,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/study/v1/about").permitAll()
                 .antMatchers("/study/v1/info").hasRole(VIEW_INFO.name())
                 .antMatchers("/study/v1/admin").hasRole(VIEW_ADMIN.name())
+                .antMatchers("/study/v1/blockedUsers").permitAll()
+                //.hasAnyRole(VIEW_INFO.name(), VIEW_ADMIN.name(), USER.name(), ADMIN.name())
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                //.httpBasic();
+                //Login form auth
+                .formLogin()
+                .loginPage("/login")
+                .failureUrl("/login?error")
+                .permitAll()
+                .and()
+                .logout()
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
     }
 
     @Bean
@@ -64,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
 
     @Bean
-    public GrantedAuthoritiesMapper grantedAuthoritiesMapper(){
+    public GrantedAuthoritiesMapper grantedAuthoritiesMapper() {
         SimpleAuthorityMapper simpleAuthorityMapper = new SimpleAuthorityMapper();
         simpleAuthorityMapper.setConvertToUpperCase(true);
         return simpleAuthorityMapper;
